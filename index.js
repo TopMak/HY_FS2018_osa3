@@ -40,6 +40,11 @@ app.get('/',(req, res) => {
   res.send('<h1>Phonebook REST API</h1> <p>try /api/persons </p>')
 })
 
+//Info-"sivu"
+app.get('/Info',(req, res) => {
+  res.send('<p> Luettelossa on ' + yhteystiedot.persons.length + ' henkilöä </p>' + Date())
+})
+
 //GET all metodi
 app.get('/api/persons', (req,res) => {
   res.json(yhteystiedot.persons)
