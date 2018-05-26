@@ -73,6 +73,9 @@ app.post('/api/persons', (req,res) => {
   if (viesti.name === undefined || viesti.number === undefined) {
     console.log("Post with content missing")
     return res.status(400).json({error: 'name or number missing'})
+  } else if (yhteystiedot.persons.find(n => n.name.toLowerCase() === viesti.name.toLowerCase())) { //Nimi on jo luettelossa
+       console.log("Nimi löytyy");
+       return res.status(400).json({error: 'name must be unique'})
   }
 
   const uusiHenkilo = {
@@ -80,10 +83,10 @@ app.post('/api/persons', (req,res) => {
     number: viesti.number,
     id: generateID()
   }
-  console.log(uusiHenkilo)
+  //console.log(uusiHenkilo)
   yhteystiedot.persons = yhteystiedot.persons.concat(uusiHenkilo)
   //console.log(yhteystiedot.persons);
-
+  res.json(uusiHenkilo)
 })
 
 //DELETE by id polku
