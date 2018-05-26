@@ -50,6 +50,18 @@ app.get('/api/persons', (req,res) => {
   res.json(yhteystiedot.persons)
 })
 
+//GET by id metodi
+app.get('/api/persons/:id', (req,res) => {
+  const id = Number(req.params.id)
+  const henkilo = yhteystiedot.persons.find(n => n.id === id)
+  console.log(henkilo);
+  if(henkilo){
+    res.json(henkilo)
+  } else {
+    res.status(404).end()
+  }
+})
+
 //console.log(yhteystiedot);
 //Porttimääritys ja käynnistä palvelin
 const PORT = 3001
