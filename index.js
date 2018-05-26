@@ -4,7 +4,7 @@ const app = express()
 
 app.use(bodyParser.json())
 
-const yhteystiedot = {
+let yhteystiedot = {
 "persons": [
   {
     "name": "Arto Hellas",
@@ -45,12 +45,12 @@ app.get('/Info',(req, res) => {
   res.send('<p> Luettelossa on ' + yhteystiedot.persons.length + ' henkilöä </p>' + Date())
 })
 
-//GET all metodi
+//GET all polku
 app.get('/api/persons', (req,res) => {
   res.json(yhteystiedot.persons)
 })
 
-//GET by id metodi
+//GET by id polku
 app.get('/api/persons/:id', (req,res) => {
   const id = Number(req.params.id)
   const henkilo = yhteystiedot.persons.find(n => n.id === id)
@@ -60,6 +60,14 @@ app.get('/api/persons/:id', (req,res) => {
   } else {
     res.status(404).end()
   }
+})
+
+//DELETE by id polku
+app.delete('/api/persons/:id', (req,res) => {
+  const id = Number(req.params.id)
+  yhteystiedot.persons = yhteystiedot.persons.filter(n => n.id !== id)
+  console.log(yhteystiedot.persons)
+  res.status(204).end()
 })
 
 //console.log(yhteystiedot);
