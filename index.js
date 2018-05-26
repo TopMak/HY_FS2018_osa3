@@ -4,6 +4,10 @@ const app = express()
 
 app.use(bodyParser.json())
 
+const generateID = () => {
+  return Math.ceil(Math.random() * 100000)
+}
+
 let yhteystiedot = {
 "persons": [
   {
@@ -33,7 +37,7 @@ let yhteystiedot = {
   }
 ]}
 
-
+/*--- ROUTES --- */
 
 //Juuri
 app.get('/',(req, res) => {
@@ -62,6 +66,26 @@ app.get('/api/persons/:id', (req,res) => {
   }
 })
 
+//POST uusi yhteystieto
+app.post('/api/persons', (req,res) => {
+ const viesti = req.body
+
+  if (viesti.name === undefined || viesti.number === undefined) {
+    console.log("Post with content missing")
+    return res.status(400).json({error: 'name or number missing'})
+  }
+
+  const uusiHenkilo = {
+    name: viesti.name,
+    number: viesti.number,
+    id: generateID()
+  }
+  console.log(uusiHenkilo)
+  yhteystiedot.persons = yhteystiedot.persons.concat(uusiHenkilo)
+  //console.log(yhteystiedot.persons);
+
+})
+
 //DELETE by id polku
 app.delete('/api/persons/:id', (req,res) => {
   const id = Number(req.params.id)
@@ -70,7 +94,8 @@ app.delete('/api/persons/:id', (req,res) => {
   res.status(204).end()
 })
 
-//console.log(yhteystiedot);
+
+/*--- SERVER CONF & START --- */
 //Porttimääritys ja käynnistä palvelin
 const PORT = 3001
 app.listen(PORT, () => {
