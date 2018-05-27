@@ -4,8 +4,25 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(bodyParser.json())
+
+morgan.token('msg', function (req, res) { return JSON.stringify(req.body) })
+
+//Custom asetukset morganille
+const logger = morgan(function (tokens, req, res) {
+  console.log(req.body);
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.msg(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+})
+
 //Logger middleware
-app.use(morgan('tiny'))
+//app.use(morgan('tiny'))
+app.use(logger)
 
 const generateID = () => {
   return Math.ceil(Math.random() * 100000)
