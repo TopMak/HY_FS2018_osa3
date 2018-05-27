@@ -1,8 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 const app = express()
 
 app.use(bodyParser.json())
+//Logger middleware
+app.use(morgan('tiny'))
 
 const generateID = () => {
   return Math.ceil(Math.random() * 100000)
@@ -58,7 +61,7 @@ app.get('/api/persons', (req,res) => {
 app.get('/api/persons/:id', (req,res) => {
   const id = Number(req.params.id)
   const henkilo = yhteystiedot.persons.find(n => n.id === id)
-  console.log(henkilo);
+  //console.log(henkilo);
   if(henkilo){
     res.json(henkilo)
   } else {
