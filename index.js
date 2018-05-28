@@ -10,7 +10,7 @@ morgan.token('msg', function (req, res) { return JSON.stringify(req.body) })
 
 //Custom asetukset morganille
 const logger = morgan(function (tokens, req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   return [
     tokens.method(req, res),
     tokens.url(req, res),
@@ -95,7 +95,7 @@ app.post('/api/persons', (req,res) => {
     console.log("Post with content missing")
     return res.status(400).json({error: 'name or number missing'})
   } else if (yhteystiedot.persons.find(n => n.name.toLowerCase() === viesti.name.toLowerCase())) { //Nimi on jo luettelossa
-       console.log("Nimi löytyy");
+       console.log("Nimi exists");
        return res.status(400).json({error: 'name must be unique'})
   }
 
@@ -114,7 +114,7 @@ app.post('/api/persons', (req,res) => {
 app.delete('/api/persons/:id', (req,res) => {
   const id = Number(req.params.id)
   yhteystiedot.persons = yhteystiedot.persons.filter(n => n.id !== id)
-  console.log(yhteystiedot.persons)
+  //console.log(yhteystiedot.persons)
   res.status(204).end()
 })
 
