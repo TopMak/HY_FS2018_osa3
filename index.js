@@ -123,7 +123,7 @@ app.delete('/api/persons/:id', (req,res) => {
 
 /*--- SERVER CONF & START --- */
 //Porttimääritys ja käynnistä palvelin
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
