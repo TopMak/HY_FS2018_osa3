@@ -1,10 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
-const cors = require('cors')
 const app = express()
 
-app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
 
@@ -12,7 +10,7 @@ morgan.token('msg', function (req, res) { return JSON.stringify(req.body) })
 
 //Custom asetukset morganille
 const logger = morgan(function (tokens, req, res) {
-  //console.log(req.body);
+  console.log(req.body);
   return [
     tokens.method(req, res),
     tokens.url(req, res),
@@ -97,7 +95,7 @@ app.post('/api/persons', (req,res) => {
     console.log("Post with content missing")
     return res.status(400).json({error: 'name or number missing'})
   } else if (yhteystiedot.persons.find(n => n.name.toLowerCase() === viesti.name.toLowerCase())) { //Nimi on jo luettelossa
-       console.log("Nimi exists");
+       console.log("Nimi löytyy");
        return res.status(400).json({error: 'name must be unique'})
   }
 
