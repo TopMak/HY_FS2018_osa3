@@ -2,3 +2,6 @@
 
 # dependencies
 /node_modules
+
+#For hiding db path and authentication
+auth.js
