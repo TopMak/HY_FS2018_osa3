@@ -61,7 +61,7 @@ app.get('/api/persons', (req,res) => {
       //res.json(query.map(yhteystietoFormat))
       //res.json(Yhteystieto.format(query))
       res.json(query.map(Yhteystieto.format))
-      console.log(query.map(Yhteystieto.format));
+      //console.log(query.map(Yhteystieto.format));
     })
     .catch(error =>{
       console.log(error);
@@ -75,7 +75,6 @@ app.get('/api/persons/:id', (req,res) => {
   Yhteystieto
     .findById(req.params.id)
     .then(queryById => {
-      //res.json(yhteystietoFormat(queryById))
       res.json(Yhteystieto.format(queryById))
       //console.log(Yhteystieto.format(queryById));
     })
@@ -92,20 +91,24 @@ app.post('/api/persons', (req,res) => {
   if (viesti.name === undefined || viesti.number === undefined) {
     console.log("Post with content missing")
     return res.status(400).json({error: 'name or number missing'})
-  } else if (yhteystiedot.persons.find(n => n.name.toLowerCase() === viesti.name.toLowerCase())) { //Nimi on jo luettelossa
-       console.log("Nimi exists");
-       return res.status(400).json({error: 'name must be unique'})
   }
+  //Duplikaattiehto, ei muuteta vielä
+  // else if (yhteystiedot.persons.find(n => n.name.toLowerCase() === viesti.name.toLowerCase())) { //Nimi on jo luettelossa
+  //      console.log("Nimi exists");
+  //      return res.status(400).json({error: 'name must be unique'})
+  // }
 
-  const uusiHenkilo = {
+  const uusiHenkilo = new Yhteystieto({
     name: viesti.name,
     number: viesti.number,
-    id: generateID()
-  }
-  //console.log(uusiHenkilo)
-  yhteystiedot.persons = yhteystiedot.persons.concat(uusiHenkilo)
-  //console.log(yhteystiedot.persons);
-  res.json(uusiHenkilo)
+    date: new Date()
+  })
+
+   uusiHenkilo
+    .save()
+    .then(savedPerson =>{
+      res.json(Yhteystieto.format(savedPerson))
+    })
 })
 
 //DELETE by id polku
