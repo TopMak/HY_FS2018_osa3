@@ -8,8 +8,19 @@ const dbUrl = process.env.DB_URL
 mongoose.connect(dbUrl)
 
 //Skeema
+// const yhteystietoSkeema = new mongoose.Schema({
+//   name: String,
+//   number: String,
+//   date: Date
+// })
+
+//Lisätään skeemaan unique kenttä
 const yhteystietoSkeema = new mongoose.Schema({
-  name: String,
+  name: {
+      type:String,
+      required: true,
+      unique: true
+    },
   number: String,
   date: Date
 })

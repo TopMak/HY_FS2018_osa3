@@ -36,7 +36,8 @@ app.use(logger)
 //   res.send('<h1>Phonebook REST API</h1><p>see /info </p> <p>try /api/persons </p>')
 // })
 
-//Info-"sivu"
+/*--- Info-"sivu" --- */
+
 app.get('/info',(req, res) => {
   let numeroita = 0
   Yhteystieto
@@ -102,11 +103,6 @@ app.post('/api/persons', (req,res) => {
     console.log("Post with content missing")
     return res.status(400).json({error: 'name or number missing'})
   }
-  //Duplikaattiehto, ei muuteta vielä
-  // else if (yhteystiedot.persons.find(n => n.name.toLowerCase() === viesti.name.toLowerCase())) { //Nimi on jo luettelossa
-  //      console.log("Nimi exists");
-  //      return res.status(400).json({error: 'name must be unique'})
-  // }
 
   const uusiHenkilo = new Yhteystieto({
     name: viesti.name,
@@ -120,7 +116,9 @@ app.post('/api/persons', (req,res) => {
       res.json(Yhteystieto.format(savedPerson))
     })
     .catch(error => {
-      console.log("Virhe at new user");
+      //Tulostetaan konsoliin virhe, kerrotaan nimi
+      console.log(error.name);
+      res.status(405).send({ error: 'Name must be unique!' })
     })
 })
 
