@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const Yhteystieto = require('./models/yhteystieto')
 const app = express()
 
 app.use(bodyParser.json())
@@ -29,35 +30,6 @@ const generateID = () => {
   return Math.ceil(Math.random() * 100000)
 }
 
-let yhteystiedot = {
-"persons": [
-  {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 1
-  },
-  {
-    "name": "Martti Tienari",
-    "number": "040-123456",
-    "id": 2
-  },
-  {
-    "name": "Arto Järvinen",
-    "number": "040-123456",
-    "id": 3
-  },
-  {
-    "name": "Lea Kutvonen",
-    "number": "040-123456",
-    "id": 4
-  },
-  {
-    "name": "Martti Vartti",
-    "number": "045-9287828",
-    "id": 5
-  }
-]}
-
 /*--- ROUTES --- */
 
 //Juuri
@@ -70,24 +42,44 @@ app.get('/Info',(req, res) => {
   res.send('<p> Luettelossa on ' + yhteystiedot.persons.length + ' henkilöä </p>' + Date())
 })
 
-//GET all polku
-app.get('/api/persons', (req,res) => {
-  res.json(yhteystiedot.persons)
-})
-
-//GET by id polku
-app.get('/api/persons/:id', (req,res) => {
-  const id = Number(req.params.id)
-  const henkilo = yhteystiedot.persons.find(n => n.id === id)
-  //console.log(henkilo);
-  if(henkilo){
-    res.json(henkilo)
-  } else {
-    res.status(404).end()
+const yhteystietoFormat = (tieto) => {
+  return {
+    name: tieto.name,
+    number: tieto.number,
+    date: tieto.date,
+    id: tieto._id
   }
+}
+
+/* --- GET all polku --- */
+
+app.get('/api/persons', (req,res) => {
+  Yhteystieto
+  //Projection key: 0 voidaan "poistaa" palautettava kenttä esim. __v:0 tai date: 0
+    .find({}, {__v:0})
+    .then(query => {
+      res.json(query.map(yhteystietoFormat))
+    })
+    .catch(error =>{
+      res.status(404).send({error: "Error happened! :("})
+    })
 })
 
-//POST uusi yhteystieto
+/* --- GET by id polku --- */
+
+app.get('/api/persons/:id', (req,res) => {
+  Yhteystieto
+    .findById(req.params.id)
+    .then(queryById => {
+      res.json(yhteystietoFormat(queryById))
+    })
+    .catch(error =>{
+      res.status(404).send({error: "No such id"})
+    })
+})
+
+/* --- POST uusi yhteystieto --- */
+
 app.post('/api/persons', (req,res) => {
  const viesti = req.body
 
@@ -119,7 +111,7 @@ app.delete('/api/persons/:id', (req,res) => {
 })
 
 
-/*--- SERVER CONF & START --- */
+/* --- SERVER CONF & START --- */
 //Porttimääritys ja käynnistä palvelin
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
