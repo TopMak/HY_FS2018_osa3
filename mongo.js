@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
 //Omat
-const auth = require('./auth')
+require('dotenv').config();
+//const auth = require('./auth')
 
 //Piilottaa urlin toistaiseksi...
-const dbUrl = auth.passu
+//const dbUrl = auth.passu
+const dbUrl = process.env.DB_URL
 
 mongoose.connect(dbUrl)
 

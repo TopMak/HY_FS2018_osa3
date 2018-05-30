@@ -111,14 +111,38 @@ app.post('/api/persons', (req,res) => {
     })
 })
 
-//DELETE by id polku
+/* --- DELETE by id polku --- */
+
 app.delete('/api/persons/:id', (req,res) => {
-  const id = Number(req.params.id)
-  yhteystiedot.persons = yhteystiedot.persons.filter(n => n.id !== id)
-  //console.log(yhteystiedot.persons)
+
+  Yhteystieto
+    .findByIdAndRemove(req.params.id)
+    .then(poistettuTieto => {
+      //console.log(poistettuTieto);
+      res.status(204).end()
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'not valid id' })
+    })
+
+  // const id = Number(req.params.id)
+  // yhteystiedot.persons = yhteystiedot.persons.filter(n => n.id !== id)
+  // //console.log(yhteystiedot.persons)
   res.status(204).end()
 })
 
+app.put('/api/persons/:id', (req,res) => {
+console.log(req.body);
+})
+
+
+//Virhe: tuntemattomat polut
+const error = (request, response) => {
+  response.status(404).send({error: 'unknown endpoint'})
+}
+
+app.use(error)
 
 /* --- SERVER CONF & START --- */
 //Porttimääritys ja käynnistä palvelin
