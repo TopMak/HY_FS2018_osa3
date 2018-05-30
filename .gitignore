@@ -5,3 +5,5 @@
 
 #For hiding db path and authentication
 auth.js
+
+.env

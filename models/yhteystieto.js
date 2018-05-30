@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 
+require('dotenv').config();
 //Piilottaa urlin toistaiseksi...
-const auth = require('../auth')
-const dbUrl = auth.passu
+//const auth = require('../auth')
+const dbUrl = process.env.DB_URL
 
 mongoose.connect(dbUrl)
 
