@@ -51,7 +51,7 @@ app.get('/Info',(req, res) => {
 //   }
 // }
 
-/* --- GET all polku --- */
+/* --- GET ALL polku --- */
 
 app.get('/api/persons', (req,res) => {
   Yhteystieto
@@ -69,7 +69,7 @@ app.get('/api/persons', (req,res) => {
     })
 })
 
-/* --- GET by id polku --- */
+/* --- GET USER by id polku--- */
 
 app.get('/api/persons/:id', (req,res) => {
   Yhteystieto
@@ -83,7 +83,7 @@ app.get('/api/persons/:id', (req,res) => {
     })
 })
 
-/* --- POST uusi yhteystieto --- */
+/* --- POST NEW USER, uusi yhteystieto --- */
 
 app.post('/api/persons', (req,res) => {
  const viesti = req.body
@@ -109,9 +109,12 @@ app.post('/api/persons', (req,res) => {
     .then(savedPerson =>{
       res.json(Yhteystieto.format(savedPerson))
     })
+    .catch(error => {
+      console.log("Virhe at new user");
+    })
 })
 
-/* --- DELETE by id polku --- */
+/* --- DELETE USER by id --- */
 
 app.delete('/api/persons/:id', (req,res) => {
 
@@ -126,18 +129,34 @@ app.delete('/api/persons/:id', (req,res) => {
       response.status(400).send({ error: 'not valid id' })
     })
 
-  // const id = Number(req.params.id)
   // yhteystiedot.persons = yhteystiedot.persons.filter(n => n.id !== id)
   // //console.log(yhteystiedot.persons)
   res.status(204).end()
 })
 
+/* --- UPDATE USER by id, päivitä olemassa oleva yhteystieto --- */
+
 app.put('/api/persons/:id', (req,res) => {
-console.log(req.body);
+
+  //Kenties olisi hyvä päivittää myös aika??
+  const paivYhteyst = {
+    number: req.body.number
+  }
+  // { new: true } katso findByIdAndUpdate options kohta docs
+  Yhteystieto
+    .findByIdAndUpdate(req.params.id, paivYhteyst, {new : true})
+    .then(paivHenkilo => {
+      res.json(Yhteystieto.format(paivHenkilo))
+    })
+    .catch( error => {
+      //Tilanne jossa numero on muualla poistettu
+      res.status(400).send({ error: 'Invalid id' })
+    })
+
 })
 
+/* --- Virhe: tuntemattomat polut --- */
 
-//Virhe: tuntemattomat polut
 const error = (request, response) => {
   response.status(404).send({error: 'unknown endpoint'})
 }
