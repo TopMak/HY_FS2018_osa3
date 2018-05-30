@@ -42,14 +42,14 @@ app.get('/Info',(req, res) => {
   res.send('<p> Luettelossa on ' + yhteystiedot.persons.length + ' henkilöä </p>' + Date())
 })
 
-const yhteystietoFormat = (tieto) => {
-  return {
-    name: tieto.name,
-    number: tieto.number,
-    date: tieto.date,
-    id: tieto._id
-  }
-}
+// const yhteystietoFormat = (tieto) => {
+//   return {
+//     name: tieto.name,
+//     number: tieto.number,
+//     date: tieto.date,
+//     id: tieto._id
+//   }
+// }
 
 /* --- GET all polku --- */
 
@@ -58,9 +58,13 @@ app.get('/api/persons', (req,res) => {
   //Projection key: 0 voidaan "poistaa" palautettava kenttä esim. __v:0 tai date: 0
     .find({}, {__v:0})
     .then(query => {
-      res.json(query.map(yhteystietoFormat))
+      //res.json(query.map(yhteystietoFormat))
+      //res.json(Yhteystieto.format(query))
+      res.json(query.map(Yhteystieto.format))
+      console.log(query.map(Yhteystieto.format));
     })
     .catch(error =>{
+      console.log(error);
       res.status(404).send({error: "Error happened! :("})
     })
 })
@@ -71,7 +75,9 @@ app.get('/api/persons/:id', (req,res) => {
   Yhteystieto
     .findById(req.params.id)
     .then(queryById => {
-      res.json(yhteystietoFormat(queryById))
+      //res.json(yhteystietoFormat(queryById))
+      res.json(Yhteystieto.format(queryById))
+      //console.log(Yhteystieto.format(queryById));
     })
     .catch(error =>{
       res.status(404).send({error: "No such id"})
