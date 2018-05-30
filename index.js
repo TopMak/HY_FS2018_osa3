@@ -22,24 +22,34 @@ const logger = morgan(function (tokens, req, res) {
   ].join(' ')
 })
 
+/*--- MIDDLEWARE --- */
+
 //Logger middleware
 //app.use(morgan('tiny'))
 app.use(logger)
 
-const generateID = () => {
-  return Math.ceil(Math.random() * 100000)
-}
 
 /*--- ROUTES --- */
 
 //Juuri
-app.get('/',(req, res) => {
-  res.send('<h1>Phonebook REST API</h1> <p>try /api/persons </p>')
-})
+// app.get('/',(req, res) => {
+//   res.send('<h1>Phonebook REST API</h1><p>see /info </p> <p>try /api/persons </p>')
+// })
 
 //Info-"sivu"
-app.get('/Info',(req, res) => {
-  res.send('<p> Luettelossa on ' + yhteystiedot.persons.length + ' henkilöä </p>' + Date())
+app.get('/info',(req, res) => {
+  let numeroita = 0
+  Yhteystieto
+    .find({},{__v: 0})
+    .then(notes => {
+      console.log(notes.length);
+      res.send('<p> Luettelossa on ' + notes.length + ' henkilöä </p>' + Date())
+    })
+    .catch(error => {
+      console.log("Yhteysvirhe?");
+      res.status(404).send({error: "Connection error"})
+    })
+
 })
 
 // const yhteystietoFormat = (tieto) => {

@@ -22,7 +22,7 @@ yhteystietoSkeema.statics.format = function(tieto) {
   return {
     name: tieto.name,
     number: tieto.number,
-    date: tieto.date,
+    //date: tieto.date,   /* Tämä Teht3.18 mukaisesti */
     id: tieto._id
   }
 }
