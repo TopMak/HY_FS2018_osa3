@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-require('dotenv').config();
+require('dotenv').config()
 //Piilottaa urlin toistaiseksi...
 //const auth = require('../auth')
 const dbUrl = process.env.DB_URL || process.env.DB_URL_DEVEL
@@ -10,10 +10,10 @@ mongoose.connect(dbUrl)
 //Lisätään skeemaan unique kenttä
 const yhteystietoSkeema = new mongoose.Schema({
   name: {
-      type:String,
-      required: true,
-      unique: true
-    },
+    type:String,
+    required: true,
+    unique: true
+  },
   number: String,
   date: Date
 })
